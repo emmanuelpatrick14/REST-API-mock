@@ -2,8 +2,10 @@ import { createUserHandler } from "./controller/user.controller";
 import { Express, Request, Response } from "express";
 import { createUserSchema } from "./schema/user.schema";
 import validateResource from "./middleware/validateResource";
-import { creatUserSessionHandler } from "./controller/session.controller";
+import { creatUserSessionHandler, getUserSessionsHandler } from "./controller/session.controller";
 import { createSessionSchema } from "./schema/session.schema";
+import { deserializeUser } from "./middleware/deserializeUser";
+import { requireUser } from "./middleware/requireUser";
 function routes(app: Express) {
   app.get("/healthcheck", (req: Request, res: Response) => {
     console.log("gdgggs");
@@ -14,6 +16,8 @@ function routes(app: Express) {
 
   
   app.post("/api/sessions", validateResource(createSessionSchema), creatUserSessionHandler);
+
+  app.get("/api/sessions",requireUser, getUserSessionsHandler);
 }
 
 export default routes;
